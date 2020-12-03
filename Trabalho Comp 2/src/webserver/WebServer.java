@@ -14,7 +14,7 @@ public class WebServer {
 
 			listenSocket = new ServerSocket(porta);
 
-			ConexaoMySQL.getConexaoMySQL();
+			ConexaoMySQL.getConexao();
 
 			System.err.println("Servidor rodando...");
 			System.err.println("Porta: " + porta);

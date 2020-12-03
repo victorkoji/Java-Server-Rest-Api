@@ -3,6 +3,12 @@ package webserver;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+
+import org.json.JSONObject;
+
+import controllers.ActorController;
+import controllers.MovieController;
+
 import java.nio.file.*;
 
 
@@ -12,7 +18,7 @@ public class Client implements Runnable {
 
 		/** Inicializa a conexão com o socket **/
 		public Client(Socket connec) throws SocketException {
-			connec.setSoTimeout(10 * 1000);
+			connec.setSoTimeout(30 * 1000);
 			this.connectionSocket = connec;
 	    }
 	    
@@ -29,20 +35,42 @@ public class Client implements Runnable {
 					// Saída da informação Server -> Client
 					outToClient = new DataOutputStream(connectionSocket.getOutputStream());
 
-					requestMessageLine = inFromClient.readLine();
+					requestMessageLine = inFromClient.readLine();		
+					
 					StringTokenizer tokenizedLine = new StringTokenizer(requestMessageLine);
-
-					if (tokenizedLine.nextToken().equals("GET")) {
+					String method = tokenizedLine.nextToken();
+					
+					if (method.equals("GET")) {
 						fileName = tokenizedLine.nextToken();
 
 						if(fileName.equals("/") || fileName.equals(""))
 							fileName = "public/";
 						else if (fileName.startsWith("/") == true)
 							fileName = fileName.substring(1);
+						
+						
+						
+						switch (fileName) {
+							case "actors": {
+								ActorController actor = new ActorController();
+								System.out.println(actor.getListActors());
+								
+								break;
+							}
+							case "movies": {
+								
+								MovieController movie = new MovieController();
+								System.out.println(movie.getListMovies());
+
+								break;
+							}
+							default:
+								throw new IllegalArgumentException("Unexpected value: ");
+						}
 
 						try {
 							File file = new File(fileName);
-
+							
 							/** Se for um diretório **/
 							if (file.isDirectory()) {
 								listarItensDiretorio(file, outToClient);
@@ -63,8 +91,23 @@ public class Client implements Runnable {
 								"Nao pode encontrar essa url\r\n"
 							);
 						}
-					}
-					else
+					}else if(method.equals("POST")) {
+						
+						ActorController actor = new ActorController();
+						actor.getListActors();
+						
+//						StringBuilder response = new StringBuilder();
+//					    String responseLine = null;
+//					    while ((responseLine = inFromClient.readLine()) != null) {
+//					        response.append(responseLine);
+//					        System.out.println(responseLine);
+//					    }
+//					    
+//					    JSONObject json = new JSONObject(response.toString());
+//					    System.out.println(json.getString("title"));
+//
+//					    System.out.println(response.toString());
+					}else
 						System.out.println("Bad Request Message");
 				}
 			} catch (SocketTimeoutException ste) {
@@ -75,7 +118,8 @@ public class Client implements Runnable {
 					System.out.println("Não foi possível fechar!");
 				}
 			} catch (Exception e) {
-				System.out.println("Error: " + e);
+				e.printStackTrace();
+//				System.out.println("Error: " + e.prin);
 			}
 		}
 

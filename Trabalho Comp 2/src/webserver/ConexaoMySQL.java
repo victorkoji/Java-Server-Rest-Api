@@ -1,18 +1,20 @@
 package webserver;
 
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConexaoMySQL {
 	public static String status = "Nao conectou...";
+	private static Connection connection = null;
 
     public ConexaoMySQL() {
 
     }
 
-    public static java.sql.Connection getConexaoMySQL() {
-        Connection connection = null;          //atributo do tipo Connection
+    public static java.sql.Connection getConexao() {
+    	 //atributo do tipo Connection     
 
         try {
             // Carregando o JDBC Driver padrão
@@ -21,21 +23,14 @@ public class ConexaoMySQL {
             Class.forName(driverName);
             // Configurando a nossa conexão com um banco de dados//
 
-            String serverName = "localhost";    //caminho do servidor do BD
-            String mydatabase ="trabalho_comp_2";        //nome do seu banco de dados
-            String url = "jdbc:mysql://" + serverName + "/" + mydatabase;
-            String username = "root";        //nome de um usuário de seu BD
-            String password = "";      //sua senha de acesso
-
-            connection = DriverManager.getConnection(url, username, password);
+            String url = "jdbc:mysql://localhost/trabalho_comp_2";
 
             //Testa sua conexão//
-            if (connection != null) {
+            if (connection == null) {
                 status = ("STATUS--->Conectado com sucesso!");
-            } else {
-                status = ("STATUS--->Não foi possivel realizar conexão");
+                connection = DriverManager.getConnection(url, "root", "");
             }
-
+            
             System.err.println(status);
             
             return connection;
@@ -60,7 +55,7 @@ public class ConexaoMySQL {
     //Método que fecha sua conexão//
     public static boolean FecharConexao() {
         try {
-            ConexaoMySQL.getConexaoMySQL().close();
+            ConexaoMySQL.getConexao().close();
             return true;
 
         } catch (SQLException e) {
@@ -71,6 +66,6 @@ public class ConexaoMySQL {
     //Método que reinicia sua conexão//
     public static java.sql.Connection ReiniciarConexao() {
         FecharConexao();
-        return ConexaoMySQL.getConexaoMySQL();
+        return ConexaoMySQL.getConexao();
     }
 }
