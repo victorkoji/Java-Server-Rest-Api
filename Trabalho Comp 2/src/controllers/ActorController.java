@@ -9,7 +9,6 @@ import java.util.Date;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import entity.Actor;
 import model.ActorModel;
 
 
@@ -50,6 +49,5 @@ public class ActorController {
 		JSONArray result =  usuarioDAO.getList();
 
 		return result;
-
 	}
 }

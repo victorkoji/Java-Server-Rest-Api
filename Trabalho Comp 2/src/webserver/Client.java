@@ -42,59 +42,71 @@ public class Client implements Runnable {
 						StringTokenizer tokenizedLine = new StringTokenizer(requestMessageLine);
 						String method = tokenizedLine.nextToken();
 						
-						if (method.equals("GET")) {
-							fileName = tokenizedLine.nextToken();
+						switch (method) {
+							case "GET":
+								fileName = tokenizedLine.nextToken();
 
-							if(fileName.equals("/") || fileName.equals(""))
-								fileName = "public/";
-							else if (fileName.startsWith("/") == true)
-								fileName = fileName.substring(1);
-							
-							try {
-								File file = new File(fileName);
+								if(fileName.equals("/") || fileName.equals(""))
+									fileName = "public/";
+								else if (fileName.startsWith("/") == true)
+									fileName = fileName.substring(1);
 								
+								try {
+									File file = new File(fileName);
+									
+									
+									/** Se for um diretório **/
+									if (file.isDirectory()) {
+										listarItensDiretorio(file, outToClient);
+									}
+									/** Se não for um diretório e possui o cgi-bin, quer dizer que está tentando executar um programa **/
+									else if(file.getPath().indexOf("cgi-bin") != -1){
+										executarProgramaCgiBin(file, outToClient);
+									}
+									/** Se for um arquivo **/
+									else if(file.isFile()){
+										abrirArquivo(file, outToClient);
+									}else {
+										treatmentRequestGet(fileName, outToClient);
+									}
+									
+								}
+								catch (IOException e) {
+									outToClient.writeBytes("HTTP/1.1 404 File not found\r\n" +
+										"Server: FACOMCD-2020/1.0\r\n" +
+										"Content-Type: text/plain\r\n" + 
+										"Nao pode encontrar essa url\r\n"
+									);
+								}
 								
-								/** Se for um diretório **/
-								if (file.isDirectory()) {
-									listarItensDiretorio(file, outToClient);
-								}
-								/** Se não for um diretório e possui o cgi-bin, quer dizer que está tentando executar um programa **/
-								else if(file.getPath().indexOf("cgi-bin") != -1){
-									executarProgramaCgiBin(file, outToClient);
-								}
-								/** Se for um arquivo **/
-								else if(file.isFile()){
-									abrirArquivo(file, outToClient);
-								}else {
-									treatmentRequestGet(fileName, outToClient);
-								}
+								break;
+							case "POST":
+								ActorController actor = new ActorController();
+								actor.getListActors();
 								
-							}
-							catch (IOException e) {
-								outToClient.writeBytes("HTTP/1.1 404 File not found\r\n" +
-									"Server: FACOMCD-2020/1.0\r\n" +
-									"Content-Type: text/plain\r\n" + 
-									"Nao pode encontrar essa url\r\n"
-								);
-							}
-						}else if(method.equals("POST")) {
-							
-							ActorController actor = new ActorController();
-							actor.getListActors();
-							
-//							StringBuilder response = new StringBuilder();
-//						    String responseLine = null;
-//						    while ((responseLine = inFromClient.readLine()) != null) {
-//						        response.append(responseLine);
-//						        System.out.println(responseLine);
-//						    }
-//						    
-//						    JSONObject json = new JSONObject(response.toString());
-//						    System.out.println(json.getString("title"));
-	//
-//						    System.out.println(response.toString());
-						}else
-							System.out.println("Bad Request Message");
+//								StringBuilder response = new StringBuilder();
+//							    String responseLine = null;
+//							    while ((responseLine = inFromClient.readLine()) != null) {
+//							        response.append(responseLine);
+//							        System.out.println(responseLine);
+//							    }
+//							    
+//							    JSONObject json = new JSONObject(response.toString());
+//							    System.out.println(json.getString("title"));
+		//
+//							    System.out.println(response.toString());				
+								break;
+							case "PUT":
+								
+								break;
+							case "DELETE":
+								
+								break;
+	
+							default:
+								System.out.println("Bad Request Message");
+								break;
+						}	
 					}
 				}
 			} catch (SocketTimeoutException ste) {
@@ -106,7 +118,6 @@ public class Client implements Runnable {
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-//				System.out.println("Error: " + e.prin);
 			}
 		}
 

@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 
 import org.json.JSONArray;
 
-import entity.Actor;
 import model.ActorModel;
 import model.MovieModel;
 

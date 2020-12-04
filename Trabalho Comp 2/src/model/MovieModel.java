@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import entity.Movie;
 import webserver.ConexaoMySQL;
 
 public class MovieModel {
@@ -17,10 +16,11 @@ public class MovieModel {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public void cadastrar(Movie movie) {
-		
-	}
-	
+//	public void cadastrar(Movie movie) {
+//		
+//	}
+//	
+	/** Busca o movie pelo id **/
 	public JSONArray getList(int id) throws Exception {
 		String query = "SELECT * FROM movies WHERE id ="+ id;
 		
@@ -42,7 +42,7 @@ public class MovieModel {
 		return null;
 	}
 	
-	
+	/** Busca a lista toda de movies **/
 	public JSONArray getList() throws Exception {
 		String query = "SELECT * FROM movies";
 		try(PreparedStatement preparestatement = (PreparedStatement) conn.prepareStatement(query)) {
