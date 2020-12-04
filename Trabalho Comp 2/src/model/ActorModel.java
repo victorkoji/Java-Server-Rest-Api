@@ -33,6 +33,24 @@ public class ActorModel {
 		}
 	}
 	
+	public JSONArray getList(int id) throws Exception {
+		String query = "SELECT * FROM actors WHERE id =" + id;
+		try(PreparedStatement preparestatement = (PreparedStatement) conn.prepareStatement(query)) {
+				
+		      // execute the query, and get a java resultset
+		      ResultSet rs = preparestatement.executeQuery(query);
+		      JSONArray json = convertToJSONArray(rs);
+		      
+		      preparestatement.close();
+		      		      
+		      return json;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public JSONArray getList() throws Exception {
 		String query = "SELECT * FROM actors";
 		try(PreparedStatement preparestatement = (PreparedStatement) conn.prepareStatement(query)) {
@@ -42,7 +60,7 @@ public class ActorModel {
 		      JSONArray json = convertToJSONArray(rs);
 		      
 		      preparestatement.close();
-		      
+		      		      
 		      return json;
 			
 		} catch (SQLException e) {

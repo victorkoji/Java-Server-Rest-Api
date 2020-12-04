@@ -33,6 +33,17 @@ public class ActorController {
 //		response.getWriter().print("Salvo");
 //	}
 	
+	public JSONArray getListActors(String param) throws Exception{
+
+		int id = Integer.parseInt(param);
+		
+		ActorModel usuarioDAO = new ActorModel();
+		JSONArray result =  usuarioDAO.getList(id);
+
+		return result;
+
+	}
+	
 	public JSONArray getListActors() throws Exception{
 
 		ActorModel usuarioDAO = new ActorModel();

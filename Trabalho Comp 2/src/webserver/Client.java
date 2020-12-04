@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import controllers.ActorController;
@@ -37,78 +38,64 @@ public class Client implements Runnable {
 
 					requestMessageLine = inFromClient.readLine();		
 					
-					StringTokenizer tokenizedLine = new StringTokenizer(requestMessageLine);
-					String method = tokenizedLine.nextToken();
-					
-					if (method.equals("GET")) {
-						fileName = tokenizedLine.nextToken();
-
-						if(fileName.equals("/") || fileName.equals(""))
-							fileName = "public/";
-						else if (fileName.startsWith("/") == true)
-							fileName = fileName.substring(1);
+					if(requestMessageLine != null) {
+						StringTokenizer tokenizedLine = new StringTokenizer(requestMessageLine);
+						String method = tokenizedLine.nextToken();
 						
-						
-						
-						switch (fileName) {
-							case "actors": {
-								ActorController actor = new ActorController();
-								System.out.println(actor.getListActors());
-								
-								break;
-							}
-							case "movies": {
-								
-								MovieController movie = new MovieController();
-								System.out.println(movie.getListMovies());
+						if (method.equals("GET")) {
+							fileName = tokenizedLine.nextToken();
 
-								break;
-							}
-							default:
-								throw new IllegalArgumentException("Unexpected value: ");
-						}
-
-						try {
-							File file = new File(fileName);
+							if(fileName.equals("/") || fileName.equals(""))
+								fileName = "public/";
+							else if (fileName.startsWith("/") == true)
+								fileName = fileName.substring(1);
 							
-							/** Se for um diretório **/
-							if (file.isDirectory()) {
-								listarItensDiretorio(file, outToClient);
+							try {
+								File file = new File(fileName);
+								
+								
+								/** Se for um diretório **/
+								if (file.isDirectory()) {
+									listarItensDiretorio(file, outToClient);
+								}
+								/** Se não for um diretório e possui o cgi-bin, quer dizer que está tentando executar um programa **/
+								else if(file.getPath().indexOf("cgi-bin") != -1){
+									executarProgramaCgiBin(file, outToClient);
+								}
+								/** Se for um arquivo **/
+								else if(file.isFile()){
+									abrirArquivo(file, outToClient);
+								}else {
+									treatmentRequestGet(fileName, outToClient);
+								}
+								
 							}
-							/** Se não for um diretório e possui o cgi-bin, quer dizer que está tentando executar um programa **/
-							else if(file.getPath().indexOf("cgi-bin") != -1){
-								executarProgramaCgiBin(file, outToClient);
+							catch (IOException e) {
+								outToClient.writeBytes("HTTP/1.1 404 File not found\r\n" +
+									"Server: FACOMCD-2020/1.0\r\n" +
+									"Content-Type: text/plain\r\n" + 
+									"Nao pode encontrar essa url\r\n"
+								);
 							}
-							/** Se for um arquivo **/
-							else{
-								abrirArquivo(file, outToClient);
-							}
-						}
-						catch (IOException e) {
-							outToClient.writeBytes("HTTP/1.1 404 File not found\r\n" +
-								"Server: FACOMCD-2020/1.0\r\n" +
-								"Content-Type: text/plain\r\n" + 
-								"Nao pode encontrar essa url\r\n"
-							);
-						}
-					}else if(method.equals("POST")) {
-						
-						ActorController actor = new ActorController();
-						actor.getListActors();
-						
-//						StringBuilder response = new StringBuilder();
-//					    String responseLine = null;
-//					    while ((responseLine = inFromClient.readLine()) != null) {
-//					        response.append(responseLine);
-//					        System.out.println(responseLine);
-//					    }
-//					    
-//					    JSONObject json = new JSONObject(response.toString());
-//					    System.out.println(json.getString("title"));
-//
-//					    System.out.println(response.toString());
-					}else
-						System.out.println("Bad Request Message");
+						}else if(method.equals("POST")) {
+							
+							ActorController actor = new ActorController();
+							actor.getListActors();
+							
+//							StringBuilder response = new StringBuilder();
+//						    String responseLine = null;
+//						    while ((responseLine = inFromClient.readLine()) != null) {
+//						        response.append(responseLine);
+//						        System.out.println(responseLine);
+//						    }
+//						    
+//						    JSONObject json = new JSONObject(response.toString());
+//						    System.out.println(json.getString("title"));
+	//
+//						    System.out.println(response.toString());
+						}else
+							System.out.println("Bad Request Message");
+					}
 				}
 			} catch (SocketTimeoutException ste) {
 				try{
@@ -250,6 +237,59 @@ public class Client implements Runnable {
 			line += String.format("<tr><td><h2><a href=\"/%s\">Voltar</a></h2></td></tr>\n", pathVoltar);
 			line += String.format("</table>\n");
 			line += String.format("</body>\r\n");
+
+			outToClient.writeBytes("HTTP/1.0 200 Document Follows\r\n" +
+				"Server: FACOMCD-2020/1.0\r\n" +
+				"Content-Type: text/html\r\n" +
+				"Content-Length: " + line.length() + "\r\n\r\n"
+			);
+			outToClient.writeBytes(line);
+		}
+		
+		
+		private void treatmentRequestGet(String request, DataOutputStream outToClient) throws IOException, Exception {
+			
+			String[] req = request.split("/");
+			
+			switch (req[0]) {
+				case "actors": {
+					ActorController actor = new ActorController();
+					
+					if(req.length == 2)
+						responseJson(actor.getListActors(req[1]), outToClient);
+					else
+						responseJson(actor.getListActors(), outToClient);
+					
+					break;
+				}
+				case "movies": {
+					
+					MovieController movie = new MovieController();
+					
+					if(req.length == 2)
+						responseJson(movie.getListMovies(req[1]), outToClient);
+					else
+						responseJson(movie.getListMovies(), outToClient);
+
+					break;
+				}
+			}
+		}
+		
+
+		private void responseJson(JSONArray json, DataOutputStream outToClient) throws IOException{
+			String line = "";
+			
+			/** Monta a header e o começo do body **/
+			line = String.format(
+				"<html>" +
+				"<head>\r\n" +
+				"<title>Linux/kernel/ - Linux Cross Reference - Free Electrons</title>\r\n" +
+				"</head>\r\n" +
+				"<body>\r\n"
+			);
+			
+			line += json;
 
 			outToClient.writeBytes("HTTP/1.0 200 Document Follows\r\n" +
 				"Server: FACOMCD-2020/1.0\r\n" +
