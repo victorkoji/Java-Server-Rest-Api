@@ -36,8 +36,8 @@ public class ActorController {
 
 		int id = Integer.parseInt(param);
 		
-		ActorModel usuarioDAO = new ActorModel();
-		JSONArray result =  usuarioDAO.getList(id);
+		ActorModel actorDAO = new ActorModel();
+		JSONArray result =  actorDAO.getList(id);
 
 		return result;
 
@@ -45,8 +45,8 @@ public class ActorController {
 	
 	public JSONArray getListActors() throws Exception{
 
-		ActorModel usuarioDAO = new ActorModel();
-		JSONArray result =  usuarioDAO.getList();
+		ActorModel actorDAO = new ActorModel();
+		JSONArray result =  actorDAO.getList();
 
 		return result;
 	}

@@ -29,6 +29,26 @@ public class MovieController {
 		JSONArray result = movie.getList();
 		
 		return result;
+	}
+	
+	public JSONArray getListActorsByMovies(String param) throws Exception{
 
+		int id = Integer.parseInt(param);
+		
+		MovieModel movieDAO = new MovieModel();
+		JSONArray result =  movieDAO.getListActorsByMovies(id);
+
+		return result;
+
+	}
+	
+	public JSONArray deleteMovie(String param) throws Exception{
+		MovieModel movie = new MovieModel();
+
+		int id = Integer.parseInt(param);
+		
+		JSONArray result = movie.delete(id);
+		
+		return result;
 	}
 }

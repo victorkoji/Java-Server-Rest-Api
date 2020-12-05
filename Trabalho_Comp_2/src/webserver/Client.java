@@ -36,7 +36,8 @@ public class Client implements Runnable {
 					// Saída da informação Server -> Client
 					outToClient = new DataOutputStream(connectionSocket.getOutputStream());
 
-					requestMessageLine = inFromClient.readLine();		
+					requestMessageLine = inFromClient.readLine();
+					
 					
 					if(requestMessageLine != null) {
 						StringTokenizer tokenizedLine = new StringTokenizer(requestMessageLine);
@@ -53,8 +54,7 @@ public class Client implements Runnable {
 								
 								try {
 									File file = new File(fileName);
-									
-									
+
 									/** Se for um diretório **/
 									if (file.isDirectory()) {
 										listarItensDiretorio(file, outToClient);
@@ -67,6 +67,8 @@ public class Client implements Runnable {
 									else if(file.isFile()){
 										abrirArquivo(file, outToClient);
 									}else {
+										
+										/** Trata request para o banco **/
 										treatmentRequestGet(fileName, outToClient);
 									}
 									
@@ -81,9 +83,12 @@ public class Client implements Runnable {
 								
 								break;
 							case "POST":
-								ActorController actor = new ActorController();
-								actor.getListActors();
 								
+								String line;
+								while((line = inFromClient.readLine()) != null) {
+									String[] teste = line.split("\\r\\n\\r\\n");
+									System.out.println(teste[0]);
+								}
 //								StringBuilder response = new StringBuilder();
 //							    String responseLine = null;
 //							    while ((responseLine = inFromClient.readLine()) != null) {
@@ -100,7 +105,9 @@ public class Client implements Runnable {
 								
 								break;
 							case "DELETE":
-								
+								fileName = tokenizedLine.nextToken();
+								fileName = fileName.substring(1);
+								treatmentRequestDelete(fileName, outToClient);
 								break;
 	
 							default:
@@ -277,11 +284,30 @@ public class Client implements Runnable {
 					
 					MovieController movie = new MovieController();
 					
-					if(req.length == 2)
+					if(req.length == 3)
+						responseJson(movie.getListActorsByMovies(req[2]), outToClient);
+					else if(req.length == 2)
 						responseJson(movie.getListMovies(req[1]), outToClient);
 					else
 						responseJson(movie.getListMovies(), outToClient);
 
+					break;
+				}
+			}
+		}
+		
+		private void treatmentRequestDelete(String request, DataOutputStream outToClient) throws IOException, Exception {
+			
+			String[] req = request.split("/");
+			
+			switch (req[0]) {
+				case "movies": {
+					
+					MovieController movie = new MovieController();
+					
+					if(req.length == 2)
+						responseJson(movie.deleteMovie(req[1]), outToClient);
+					
 					break;
 				}
 			}
