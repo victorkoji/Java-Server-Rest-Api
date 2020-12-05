@@ -1,0 +1,2 @@
+FROM mysql:latest 
+COPY ./Trabalho_Comp_2/dump/comp_dist.sql /docker-entrypoint-initdb.d/
