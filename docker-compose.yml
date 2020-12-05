@@ -1,0 +1,25 @@
+version: '3.3'
+
+services:
+   banco-aplicacao:
+     image: mysql:5.7
+     restart: always
+     ports:
+       - "33060:3306"
+     environment:
+       MYSQL_ROOT_PASSWORD : root
+       MYSQL_DATABASE: trabalho_comp_2
+     command: --init-file /docker-entrypoint-initdb.d/comp_dist.sql
+     volumes:
+       - ./Trabalha_Comp_2/dump/comp_dist.sql:/docker-entrypoint-initdb.d/comp_dist.sql
+
+   java-api-rest-aplication:
+     depends_on:
+       - banco-aplicacao
+     image: sexta-feira
+     ports:
+       - "8080:8080"
+     restart: always
+volumes:
+    db_data: {}
+
