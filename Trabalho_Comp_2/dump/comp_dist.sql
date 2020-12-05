@@ -1,3 +1,32 @@
+-- phpMyAdmin SQL Dump
+-- version 5.0.2
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost
+-- Tempo de geração: 26-Nov-2020 às 00:00
+-- Versão do servidor: 10.5.5-MariaDB
+-- versão do PHP: 7.4.10
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Banco de dados: `comp_dist`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `actors`
+--
+
 CREATE TABLE `actors` (
   `id` int(3) DEFAULT NULL AUTO_INCREMENT,
   `name` varchar(28) DEFAULT NULL,
@@ -175,7 +204,7 @@ INSERT INTO `actors` (`id`, `name`, `birthdate`) VALUES
 (163, 'Tia Carrere', '1967-01-02'),
 (164, '', ''),
 (165, 'Ving Rhames', '1959-05-12'),
-(166, 'Caroline O\Connor', '1962-09-02'),
+(166, 'Caroline O\'Connor', '1962-09-02'),
 (167, 'Marcia Gay Harden', '1959-08-14'),
 (168, '', ''),
 (169, 'Jane Fonda', '1937-12-21'),
@@ -213,7 +242,7 @@ INSERT INTO `actors` (`id`, `name`, `birthdate`) VALUES
 (201, 'Pamela Adlon', '1966-07-09'),
 (202, 'Pierce Brosnan', '1953-05-16'),
 (203, 'Werner Krauss', '1884-06-23'),
-(204, 'Donald O\Connor', '1925-08-28'),
+(204, 'Donald O\'Connor', '1925-08-28'),
 (205, 'Keir Dullea', '1936-05-30'),
 (206, '', ''),
 (207, 'Danny Devito', '1944-11-17'),
@@ -242,7 +271,7 @@ INSERT INTO `actors` (`id`, `name`, `birthdate`) VALUES
 (230, 'Patrick McGoohan', '1928-03-19'),
 (231, 'David Tomlinson', '1917-05-07'),
 (232, 'Alan Mowbray', '1896-08-18'),
-(233, 'Maureen O\Hara', '1920-08-17'),
+(233, 'Maureen O\'Hara', '1920-08-17'),
 (234, 'Robert Wagner', '1930-02-10'),
 (235, 'Helen McCrory', '1968-08-17'),
 (236, 'Richard S. Castellano', '1933-09-04'),
@@ -411,12 +440,12 @@ CREATE TABLE `movies` (
 --
 
 INSERT INTO `movies` (`id`, `title`, `synopsis`) VALUES
-(0, 'The Godfather Part II', 'The Godfather Part II is a 1974 American epic crime film directed by Francis Ford Coppola and partially based on Mario Puzo\s 1969 novel, The Godfather. The screenplay was once again written by Coppola and Puzo. The film stars Al Pacino, Robert Duvall, Diane Keaton, Robert De Niro, Talia Shire, Morgana King, John Cazale, Marianna Hill, Michael V. Gazzo and Lee Strasberg. The film is in part, both a sequel and a prequel to 1972 The Godfather film, presenting two parallel dramas. The main storyline, following the events of the first film, centers on Michael Corleone (Pacino), the new Don of the Corleone crime family, trying to hold his business ventures together from 1958 to 1959; the other is a series of flashbacks following his father, Vito Corleone (De Niro), from his childhood in Sicily in 1901 to his founding of the Corleone family in New York City. The Godfather Part II was released in 1974, and went on to receive tremendous critical acclaim, with some even deeming it superior to its predecessor. The film was nominated for 11 Academy Awards and won six, including Best Picture. This made Part II the first film sequel to win the Academy Award for Best Picture and it remained the only sequel to do so until The Lord of the Rings: The Return of the King won the award in 2003. The film also received Academy Awards for Best Director for Coppola, Best Supporting Actor for De Niro and Best Adapted Screenplay for Coppola and Puzo. Pacino won the BAFTA Award for Best Actor and received a nomination for the Academy Award for Best Actor. The Godfather Part II, like its predecessor, is widely considered to be one of the greatest movies ever made and it remains a highly influential film in the gangster genre. The film was ranked as the thirty-second greatest film in American cinematic history by the American Film Institute in 1997 and it kept its rank 10 years later. It was selected for preservation in the United States National Film Registry in 1993 for being \"culturally significant\". A sequel, The Godfather Part III, was released 16 years later in 1990.'),
-(1, 'The Godfather', 'The Godfather is a 1972 American epic crime film directed by Francis Ford Coppola from a screenplay by Mario Puzo, Coppola and an uncredited Robert Towne in a production of Albert S. Ruddy. Based on Puzo\s 1969 novel of the same name, the film stars Marlon Brando and Al Pacino as the leaders of a powerful New York crime family. The story, spanning the years 1945 to 1955, centers on the ascension of Michael Corleone (Pacino) from reluctant family outsider to ruthless Mafia boss while also chronicling the experiences of the Corleone family under the patriarch Vito Corleone (Brando). The Godfather is widely regarded as one of the greatest films in world cinema – and as one of the most influential, especially in the gangster genre. Now ranked as the second greatest film in American cinema by the American Film Institute, it was selected for preservation in the United States National Film Registry in 1990 for being \"culturally significant. \" The film\s success spawned two sequels: The Godfather Part II in 1974, and The Godfather Part III in 1990. The film was for a time the highest grossing picture ever made, and remains the leader in grosses for 1972. It won three Oscars that year: for Best Picture, for Best Actor (Brando) and in the category Best Adapted Screenplay for Puzo and Coppola. Its nominations in seven other categories included Pacino, James Caan and Robert Duvall for Best Supporting Actor and Coppola for Best Director.'),
-(2, 'The Man Who Knew Too Much', 'The Man Who Knew Too Much is a British suspense film directed by Alfred Hitchcock, featuring Peter Lorre, and released by Gaumont British. It was one of the most successful and critically acclaimed films of Hitchcock\'s British period. Hitchcock remade the film with James Stewart and Doris Day in 1956 for Paramount Pictures; it\'s the only film he ever remade. The two films are, however, very different in tone, in setting, and in many plot details. The film has nothing at all in common (except the title) with G. K. Chesterton\s 1922 book of detective stories of the same name. Hitchcock decided to use the title as he had the rights for some of the stories in the novel.'),
+(0, 'The Godfather Part II', 'The Godfather Part II is a 1974 American epic crime film directed by Francis Ford Coppola and partially based on Mario Puzo\'s 1969 novel, The Godfather. The screenplay was once again written by Coppola and Puzo. The film stars Al Pacino, Robert Duvall, Diane Keaton, Robert De Niro, Talia Shire, Morgana King, John Cazale, Marianna Hill, Michael V. Gazzo and Lee Strasberg. The film is in part, both a sequel and a prequel to 1972 The Godfather film, presenting two parallel dramas. The main storyline, following the events of the first film, centers on Michael Corleone (Pacino), the new Don of the Corleone crime family, trying to hold his business ventures together from 1958 to 1959; the other is a series of flashbacks following his father, Vito Corleone (De Niro), from his childhood in Sicily in 1901 to his founding of the Corleone family in New York City. The Godfather Part II was released in 1974, and went on to receive tremendous critical acclaim, with some even deeming it superior to its predecessor. The film was nominated for 11 Academy Awards and won six, including Best Picture. This made Part II the first film sequel to win the Academy Award for Best Picture and it remained the only sequel to do so until The Lord of the Rings: The Return of the King won the award in 2003. The film also received Academy Awards for Best Director for Coppola, Best Supporting Actor for De Niro and Best Adapted Screenplay for Coppola and Puzo. Pacino won the BAFTA Award for Best Actor and received a nomination for the Academy Award for Best Actor. The Godfather Part II, like its predecessor, is widely considered to be one of the greatest movies ever made and it remains a highly influential film in the gangster genre. The film was ranked as the thirty-second greatest film in American cinematic history by the American Film Institute in 1997 and it kept its rank 10 years later. It was selected for preservation in the United States National Film Registry in 1993 for being \"culturally significant\". A sequel, The Godfather Part III, was released 16 years later in 1990.'),
+(1, 'The Godfather', 'The Godfather is a 1972 American epic crime film directed by Francis Ford Coppola from a screenplay by Mario Puzo, Coppola and an uncredited Robert Towne in a production of Albert S. Ruddy. Based on Puzo\'s 1969 novel of the same name, the film stars Marlon Brando and Al Pacino as the leaders of a powerful New York crime family. The story, spanning the years 1945 to 1955, centers on the ascension of Michael Corleone (Pacino) from reluctant family outsider to ruthless Mafia boss while also chronicling the experiences of the Corleone family under the patriarch Vito Corleone (Brando). The Godfather is widely regarded as one of the greatest films in world cinema – and as one of the most influential, especially in the gangster genre. Now ranked as the second greatest film in American cinema by the American Film Institute, it was selected for preservation in the United States National Film Registry in 1990 for being \"culturally significant. \" The film\'s success spawned two sequels: The Godfather Part II in 1974, and The Godfather Part III in 1990. The film was for a time the highest grossing picture ever made, and remains the leader in grosses for 1972. It won three Oscars that year: for Best Picture, for Best Actor (Brando) and in the category Best Adapted Screenplay for Puzo and Coppola. Its nominations in seven other categories included Pacino, James Caan and Robert Duvall for Best Supporting Actor and Coppola for Best Director.'),
+(2, 'The Man Who Knew Too Much', 'The Man Who Knew Too Much is a British suspense film directed by Alfred Hitchcock, featuring Peter Lorre, and released by Gaumont British. It was one of the most successful and critically acclaimed films of Hitchcock\'s British period. Hitchcock remade the film with James Stewart and Doris Day in 1956 for Paramount Pictures; it\'s the only film he ever remade. The two films are, however, very different in tone, in setting, and in many plot details. The film has nothing at all in common (except the title) with G. K. Chesterton\'s 1922 book of detective stories of the same name. Hitchcock decided to use the title as he had the rights for some of the stories in the novel.'),
 (3, 'Epic Movie', 'Epic Movie is a 2007 American parody film directed and written by Jason Friedberg and Aaron Seltzer and produced by Paul Schiff. It was made in a similar style to Date Movie, Friedberg and Seltzer\'s previous film. The film mostly references The Chronicles of Narnia: The Lion, the Witch and the Wardrobe, the \"Harry Potter\" films and Tim Burton\'s version of Charlie and the Chocolate Factory. The song \"Ms. New Booty\" by Bubba Sparxxx gained commercial attention for being featured in Epic Movie. It was the only film to be distributed by Regency.'),
-(4, 'Apocalypto', 'Apocalypto is a 2006 American epic action-adventure film directed by Mel Gibson. It was written by Gibson and Farhad Safinia. Set in Yucatan, Mexico, during the declining period of the Maya civilization, Apocalypto depicts the journey of a Mesoamerican tribesman who must escape human sacrifice and rescue his family after the capture and destruction of his village. The film features a cast of Mayas, and some other people of Native American descent. Its Yucatec Maya dialogue is accompanied by subtitles. A financial success and generally well-received by critics, Apocalypto was also nominated for numerous awards. However, the film\s depictions of native cultures sparked some controversy.'),
-(5, 'The Crying Game', 'The Crying Game is a 1992 psychological thriller drama film written and directed by Neil Jordan. The film explores themes of race, gender, nationality, and sexuality against the backdrop of the Irish Troubles. The original working title of the film was The Soldier\'s Wife. The Crying Game is about the experiences of the main character, Fergus, as a member of the IRA, his brief but meaningful encounter with Jody who is held prisoner by the group, and his unexpected romantic relationship with Jody\s girlfriend, Dil whom Fergus promised Jody he would protect. However, unexpected events force Fergus to decide what he wants for the future, and ultimately what his nature dictates he must do.'),
+(4, 'Apocalypto', 'Apocalypto is a 2006 American epic action-adventure film directed by Mel Gibson. It was written by Gibson and Farhad Safinia. Set in Yucatan, Mexico, during the declining period of the Maya civilization, Apocalypto depicts the journey of a Mesoamerican tribesman who must escape human sacrifice and rescue his family after the capture and destruction of his village. The film features a cast of Mayas, and some other people of Native American descent. Its Yucatec Maya dialogue is accompanied by subtitles. A financial success and generally well-received by critics, Apocalypto was also nominated for numerous awards. However, the film\'s depictions of native cultures sparked some controversy.'),
+(5, 'The Crying Game', 'The Crying Game is a 1992 psychological thriller drama film written and directed by Neil Jordan. The film explores themes of race, gender, nationality, and sexuality against the backdrop of the Irish Troubles. The original working title of the film was The Soldier\'s Wife. The Crying Game is about the experiences of the main character, Fergus, as a member of the IRA, his brief but meaningful encounter with Jody who is held prisoner by the group, and his unexpected romantic relationship with Jody\'s girlfriend, Dil whom Fergus promised Jody he would protect. However, unexpected events force Fergus to decide what he wants for the future, and ultimately what his nature dictates he must do.'),
 (6, 'Oliver Twist', 'Oliver Twist is a 1933 American film directed by William J. Cowen. It is an adaptation of Charles Dickens\'s popular novel with the same name and was the first sound version of the classic. It stars Irving Pichel as Fagin, Dickie Moore as Oliver, Doris Lloyd as Nancy, and William \"Stage\" Boyd as Bill Sikes. Pichel played Fagin without resorting to any mannerisms which could be construed as offensive. Released by Monogram Pictures, the film was made on an extremely low budget. It never really achieved much success and was out of circulation for many years, but resurfaced on television in the 1980s.'),
 (7, 'Salvador (Puig Antich)', 'Salvador (Puig Antich) (or Salvador) is a 2006 Spanish film directed by Manuel Huerga. It is based on the Francesc Escribano book Compte enrere. La història de Salvador Puig Antich, which describes the execution of Salvador Puig Antich, the last person executed by garrote under the dictatorship of Francisco Franco. The film was screened in the Un Certain Regard section at the 2006 Cannes Film Festival.'),
 (8, 'A Busy Day', 'A Busy Day is a 1914 short film starring Charlie Chaplin and Mack Swain.'),
