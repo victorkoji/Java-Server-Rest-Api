@@ -83,12 +83,27 @@ public class Client implements Runnable {
 								
 								break;
 							case "POST":
-								
+								StringBuilder requestBuilder = new StringBuilder();
+								StringBuilder parteUtilizadaBuilder = new StringBuilder();
 								String line;
-								while((line = inFromClient.readLine()) != null) {
-									String[] teste = line.split("\\r\\n\\r\\n");
-									System.out.println(teste[0]);
+								
+								while(!(line = inFromClient.readLine()).isEmpty()) {
+									requestBuilder.append(line + "\r\n");
+									
 								}
+								String request = requestBuilder.toString();
+
+								String[] linhaRequisicao = request.split("\r\n");
+								String[] reqLine = linhaRequisicao[0].split(" ");
+								
+								while (inFromClient.ready()) {
+									parteUtilizadaBuilder.append((char) inFromClient.read());
+									
+				                }
+								String body = parteUtilizadaBuilder.toString();
+								int pos = body.indexOf(",\n");
+								System.out.println(body);
+								System.out.println(pos);
 //								StringBuilder response = new StringBuilder();
 //							    String responseLine = null;
 //							    while ((responseLine = inFromClient.readLine()) != null) {

@@ -6,7 +6,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="C:/Users/vitor/Desktop/Projetos/Eclipse Work Space/Trabalho Comp 2/json-20201115.jar"/>
-	<classpathentry kind="lib" path="C:/Users/vitor/Desktop/Projetos/Eclipse Work Space/Trabalho Comp 2/mysql-connector-java-5.1.49-bin.jar"/>
+	<classpathentry kind="lib" path="json-20201115.jar"/>
+	<classpathentry kind="lib" path="mysql-connector-java-5.1.49-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

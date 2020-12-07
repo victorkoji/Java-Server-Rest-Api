@@ -23,14 +23,14 @@ public class ConexaoMySQL {
             Class.forName(driverName);
             
             // Configurando a nossa conexão com um banco de dados//
-            String url = "jdbc:mysql://application_db:3306/trabalho_comp_2";
-//            String url = "jdbc:mysql://localhost/trabalho_comp_2";
+            // String url = "jdbc:mysql://application_db:3306/trabalho_comp_2";
+            String url = "jdbc:mysql://localhost/trabalho_comp_2";
 
             //Testa sua conexão//
             if (connection == null) {
                 status = ("STATUS--->Conectado com sucesso!");
-                connection = DriverManager.getConnection(url, "root", "root");
-//                connection = DriverManager.getConnection(url, "root", "");
+               // connection = DriverManager.getConnection(url, "root", "root");
+                connection = DriverManager.getConnection(url, "root", "");
             }
             
             System.err.println(status);
