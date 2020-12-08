@@ -6,6 +6,7 @@ import java.util.*;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.XML;
 
 import controllers.ActorController;
 import controllers.MovieController;
@@ -25,7 +26,6 @@ public class Client implements Runnable {
 	    
 	    public void run() {
 			String requestMessageLine = null;
-			String fileName = null;
 			BufferedReader inFromClient = null;
 			DataOutputStream outToClient = null;
 			
@@ -42,10 +42,15 @@ public class Client implements Runnable {
 					if(requestMessageLine != null) {
 						StringTokenizer tokenizedLine = new StringTokenizer(requestMessageLine);
 						String method = tokenizedLine.nextToken();
+						String fileName = tokenizedLine.nextToken();
+						StringBuilder requestBuilder = new StringBuilder();
+						StringBuilder bodyRequestBuilder = new StringBuilder();
+						String line;
+						String body;
+						JSONObject obj;
 						
 						switch (method) {
 							case "GET":
-								fileName = tokenizedLine.nextToken();
 
 								if(fileName.equals("/") || fileName.equals(""))
 									fileName = "public/";
@@ -69,7 +74,7 @@ public class Client implements Runnable {
 									}else {
 										
 										/** Trata request para o banco **/
-										treatmentRequestGet(fileName, outToClient);
+										treatmentRequestGet(fileName, method, outToClient);
 									}
 									
 								}
@@ -83,46 +88,29 @@ public class Client implements Runnable {
 								
 								break;
 							case "POST":
-								StringBuilder requestBuilder = new StringBuilder();
-								StringBuilder parteUtilizadaBuilder = new StringBuilder();
-								String line;
+							case "PUT":
+								fileName = fileName.substring(1);
 								
+								/** Guarda a header da request **/
 								while(!(line = inFromClient.readLine()).isEmpty()) {
 									requestBuilder.append(line + "\r\n");
-									
 								}
-								String request = requestBuilder.toString();
-
-								String[] linhaRequisicao = request.split("\r\n");
-								String[] reqLine = linhaRequisicao[0].split(" ");
 								
+								/** Pega o body da request**/
 								while (inFromClient.ready()) {
-									parteUtilizadaBuilder.append((char) inFromClient.read());
-									
+									bodyRequestBuilder.append((char) inFromClient.read());
 				                }
-								String body = parteUtilizadaBuilder.toString();
-								int pos = body.indexOf(",\n");
-								System.out.println(body);
-								System.out.println(pos);
-//								StringBuilder response = new StringBuilder();
-//							    String responseLine = null;
-//							    while ((responseLine = inFromClient.readLine()) != null) {
-//							        response.append(responseLine);
-//							        System.out.println(responseLine);
-//							    }
-//							    
-//							    JSONObject json = new JSONObject(response.toString());
-//							    System.out.println(json.getString("title"));
-		//
-//							    System.out.println(response.toString());				
-								break;
-							case "PUT":
+								body = bodyRequestBuilder.toString();
+								obj = new JSONObject(body);
+								
+								/** Trata request para o banco **/
+								treatmentRequestPostPut(fileName, method, obj, outToClient);
 								
 								break;
+							
 							case "DELETE":
-								fileName = tokenizedLine.nextToken();
 								fileName = fileName.substring(1);
-								treatmentRequestDelete(fileName, outToClient);
+								treatmentRequestDelete(fileName, method, outToClient);
 								break;
 	
 							default:
@@ -202,11 +190,9 @@ public class Client implements Runnable {
 			/** Inicializa as variáveis para abrir o arquivo **/
 			String fileName = file.getPath();
 			int numOfBytes = (int) file.length();
-			FileInputStream inFile = new FileInputStream(fileName);
+
 			byte[] fileInBytes = new byte[numOfBytes];
 			String contentType = Files.probeContentType(file.toPath());
-
-			inFile.read(fileInBytes);
 
 			outToClient.writeBytes("HTTP/1.0 200 Document Follows\r\n" +
 				"Server: FACOMCD-2020/1.0\r\n" +
@@ -280,10 +266,10 @@ public class Client implements Runnable {
 		}
 		
 		
-		private void treatmentRequestGet(String request, DataOutputStream outToClient) throws IOException, Exception {
+		private void treatmentRequestGet(String request, String method, DataOutputStream outToClient) throws IOException, Exception {
 			
 			String[] req = request.split("/");
-			
+	
 			switch (req[0]) {
 				case "actors": {
 					ActorController actor = new ActorController();
@@ -311,10 +297,29 @@ public class Client implements Runnable {
 			}
 		}
 		
-		private void treatmentRequestDelete(String request, DataOutputStream outToClient) throws IOException, Exception {
+		private void treatmentRequestPostPut(String request, String method, JSONObject obj, DataOutputStream outToClient) throws IOException, Exception {
+			
+//			String[] req = request.split("/");
+			MovieController movie = new MovieController();
+			
+			switch (method) {
+			case "POST":
+				responseJson(movie.cadastrarMovie(obj), outToClient);
+				break;
+			case "PUT":
+				responseJson(movie.atualizarMovie(obj), outToClient);
+				break;
+			
+			default:
+				System.out.println("Metodo nao implementado.");
+				break;
+			}
+		}
+		
+		private void treatmentRequestDelete(String request, String method, DataOutputStream outToClient) throws IOException, Exception {
 			
 			String[] req = request.split("/");
-			
+
 			switch (req[0]) {
 				case "movies": {
 					
@@ -346,6 +351,23 @@ public class Client implements Runnable {
 			outToClient.writeBytes("HTTP/1.0 200 Document Follows\r\n" +
 				"Server: FACOMCD-2020/1.0\r\n" +
 				"Content-Type: text/html\r\n" +
+				"Content-Length: " + line.length() + "\r\n\r\n"
+			);
+			outToClient.writeBytes(line);
+		}
+		
+		private void responseXML(JSONArray json, DataOutputStream outToClient) throws IOException{
+			String line = "";	
+			String xml = XML.toString(json);
+			
+			line += "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>";
+			line +="\n"+"<objetos>"+"\n"; 
+			line += xml;
+			line +="\n</objetos>";
+			
+			outToClient.writeBytes("HTTP/1.0 200 Document Follows\r\n" +
+				"Server: FACOMCD-2020/1.0\r\n" +
+				"Content-Type: 	text/xml\r\n" +
 				"Content-Length: " + line.length() + "\r\n\r\n"
 			);
 			outToClient.writeBytes(line);

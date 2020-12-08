@@ -16,10 +16,66 @@ public class MovieModel {
 		// TODO Auto-generated constructor stub
 	}
 	
-//	public void cadastrar(Movie movie) {
-//		
-//	}
-//	
+	public JSONArray cadastrar(String title, String synopsis) {
+		title = title.replaceAll("'","");
+		synopsis = synopsis.replaceAll("'","");
+		String query = String.format("INSERT INTO movies(title, synopsis) VALUES('%s', '%s')", title, synopsis);
+		
+		try(PreparedStatement preparestatement = (PreparedStatement) conn.prepareStatement(query)) {
+			
+		      // execute the query, and get a java resultset
+		      int rs = preparestatement.executeUpdate(query);
+		      JSONArray jsonArray = new JSONArray();
+		      JSONObject obj = new JSONObject();
+		      String response = "O registro foi inserido com sucesso!";
+		      
+		      if(rs == 0)
+		    	  response = "Nao foi possível cadastrar esse registro!";
+		      
+		      jsonArray.put(obj.put("response", response));
+		      
+		      preparestatement.close();
+				      
+		      return jsonArray;
+		      
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	public JSONArray atualizar(int id, String title, String synopsis) {
+		title = title.replaceAll("'","");
+		synopsis = synopsis.replaceAll("'","");
+		String query = String.format("UPDATE movies "
+				+ "SET title = '%s', synopsis = '%s'"
+				+ "WHERE id = %d", title, synopsis, id);
+		
+		try(PreparedStatement preparestatement = (PreparedStatement) conn.prepareStatement(query)) {
+			
+		      // execute the query, and get a java resultset
+		      int rs = preparestatement.executeUpdate(query);
+		      JSONArray jsonArray = new JSONArray();
+		      JSONObject obj = new JSONObject();
+		      String response = "O registro foi inserido com sucesso!";
+		      
+		      if(rs == 0)
+		    	  response = "Nao foi possível cadastrar esse registro!";
+		      
+		      jsonArray.put(obj.put("response", response));
+		      
+		      preparestatement.close();
+				      
+		      return jsonArray;
+		      
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
 	/** Busca o movie pelo id **/
 	public JSONArray getList(int id) throws Exception {
 		String query = "SELECT * FROM movies WHERE id ="+ id;

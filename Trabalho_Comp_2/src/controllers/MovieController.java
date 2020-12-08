@@ -1,17 +1,39 @@
 package controllers;
 
 import java.io.IOException;
-import java.sql.ResultSet;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
-import model.ActorModel;
 import model.MovieModel;
 
 public class MovieController {
 
 	public MovieController() {
-		// TODO Auto-generated constructor stub
+		
+	}
+	
+	public JSONArray cadastrarMovie(JSONObject request) throws IOException{
+		String nome = request.getString("title");
+		String synopsis = request.getString("synopsis");
+
+		MovieModel movieDAO = new MovieModel();
+
+		JSONArray result = movieDAO.cadastrar(nome, synopsis);
+	
+		return result;
+	}
+	
+	public JSONArray atualizarMovie(JSONObject request) throws IOException{
+		int id = request.getInt("id");
+		String nome = request.getString("title");
+		String synopsis = request.getString("synopsis");
+
+		MovieModel movieDAO = new MovieModel();
+
+		JSONArray result = movieDAO.atualizar(id, nome, synopsis);
+	
+		return result;
 	}
 	
 	public JSONArray getListMovies(String param) throws Exception{
