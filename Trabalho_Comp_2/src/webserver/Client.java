@@ -268,16 +268,32 @@ public class Client implements Runnable {
 		
 		private void treatmentRequestGet(String request, String method, DataOutputStream outToClient) throws IOException, Exception {
 			
+			int verificador = request.indexOf(".xml");
+			boolean textoEspecificado = false;
+			
+			if(verificador > 0) {
+				textoEspecificado = true;
+				request = request.replace(".xml", "");
+			}
+			
 			String[] req = request.split("/");
-	
+			
+			
 			switch (req[0]) {
 				case "actors": {
 					ActorController actor = new ActorController();
 					
 					if(req.length == 2)
-						responseJson(actor.getListActors(req[1]), outToClient);
+						//Se nao foi especificado, sera um json!
+						if(!textoEspecificado)
+							responseJson(actor.getListActors(req[1]), outToClient);
+						else
+							responseXML(actor.getListActors(req[1]), outToClient);
 					else
-						responseJson(actor.getListActors(), outToClient);
+						if(!textoEspecificado)
+							responseJson(actor.getListActors(), outToClient);
+						else
+							responseXML(actor.getListActors(), outToClient);
 					
 					break;
 				}
@@ -286,28 +302,49 @@ public class Client implements Runnable {
 					MovieController movie = new MovieController();
 					
 					if(req.length == 3)
-						responseJson(movie.getListActorsByMovies(req[2]), outToClient);
+						if(!textoEspecificado)
+							responseJson(movie.getListActorsByMovies(req[2]), outToClient);
+						else 
+							responseXML(movie.getListActorsByMovies(req[2]), outToClient);
 					else if(req.length == 2)
-						responseJson(movie.getListMovies(req[1]), outToClient);
+						if(!textoEspecificado)							
+							responseJson(movie.getListMovies(req[1]), outToClient);
+						else 
+							responseXML(movie.getListMovies(req[1]), outToClient);
 					else
-						responseJson(movie.getListMovies(), outToClient);
-
+						if(!textoEspecificado)		
+							responseJson(movie.getListMovies(), outToClient);
+						else
+							responseXML(movie.getListMovies(), outToClient);
 					break;
 				}
 			}
 		}
 		
 		private void treatmentRequestPostPut(String request, String method, JSONObject obj, DataOutputStream outToClient) throws IOException, Exception {
+
+			int verificador = request.indexOf(".xml");
+			boolean textoEspecificado = false;
 			
-//			String[] req = request.split("/");
+			if(verificador > 0) {
+				textoEspecificado = true;
+				request = request.replace(".xml", "");
+			}
+			
 			MovieController movie = new MovieController();
 			
 			switch (method) {
 			case "POST":
-				responseJson(movie.cadastrarMovie(obj), outToClient);
+				if(!textoEspecificado)
+					responseJson(movie.cadastrarMovie(obj), outToClient);
+				else
+					responseXML(movie.cadastrarMovie(obj), outToClient);
 				break;
 			case "PUT":
-				responseJson(movie.atualizarMovie(obj), outToClient);
+				if(!textoEspecificado)
+					responseJson(movie.atualizarMovie(obj), outToClient);
+				else
+					responseXML(movie.cadastrarMovie(obj), outToClient);
 				break;
 			
 			default:
@@ -317,6 +354,13 @@ public class Client implements Runnable {
 		}
 		
 		private void treatmentRequestDelete(String request, String method, DataOutputStream outToClient) throws IOException, Exception {
+			int verificador = request.indexOf(".xml");
+			boolean textoEspecificado = false;
+			
+			if(verificador > 0) {
+				textoEspecificado = true;
+				request = request.replace(".xml", "");
+			}
 			
 			String[] req = request.split("/");
 
@@ -326,7 +370,10 @@ public class Client implements Runnable {
 					MovieController movie = new MovieController();
 					
 					if(req.length == 2)
-						responseJson(movie.deleteMovie(req[1]), outToClient);
+						if(!textoEspecificado)
+							responseJson(movie.deleteMovie(req[1]), outToClient);
+						else
+							responseXML(movie.deleteMovie(req[1]), outToClient);
 					
 					break;
 				}
