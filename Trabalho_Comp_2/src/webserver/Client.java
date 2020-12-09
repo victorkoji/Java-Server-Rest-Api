@@ -265,7 +265,7 @@ public class Client implements Runnable {
 			outToClient.writeBytes(line);
 		}
 		
-		
+		/** Tratamento do GET**/
 		private void treatmentRequestGet(String request, String method, DataOutputStream outToClient) throws IOException, Exception {
 			
 			int verificador = request.indexOf(".xml");
@@ -321,6 +321,7 @@ public class Client implements Runnable {
 			}
 		}
 		
+		/** Tratamento do POST e PUT**/
 		private void treatmentRequestPostPut(String request, String method, JSONObject obj, DataOutputStream outToClient) throws IOException, Exception {
 
 			int verificador = request.indexOf(".xml");
@@ -353,6 +354,7 @@ public class Client implements Runnable {
 			}
 		}
 		
+		/** Tratamento do Delete**/
 		private void treatmentRequestDelete(String request, String method, DataOutputStream outToClient) throws IOException, Exception {
 			int verificador = request.indexOf(".xml");
 			boolean textoEspecificado = false;
@@ -380,7 +382,7 @@ public class Client implements Runnable {
 			}
 		}
 		
-
+		/** Método para enviar a resposta em JSON**/
 		private void responseJson(JSONArray json, DataOutputStream outToClient) throws IOException{
 			String line = "";
 			
@@ -403,20 +405,24 @@ public class Client implements Runnable {
 			outToClient.writeBytes(line);
 		}
 		
+		/** Método para enviar a resposta json em XML**/
 		private void responseXML(JSONArray json, DataOutputStream outToClient) throws IOException{
 			String line = "";	
 			String xml = XML.toString(json);
 			
-			line += "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>";
+			line += "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>";
 			line +="\n"+"<objetos>"+"\n"; 
 			line += xml;
 			line +="\n</objetos>";
+			byte[] lineByte = line.getBytes("UTF-8");
 			
 			outToClient.writeBytes("HTTP/1.0 200 Document Follows\r\n" +
 				"Server: FACOMCD-2020/1.0\r\n" +
 				"Content-Type: 	text/xml\r\n" +
-				"Content-Length: " + line.length() + "\r\n\r\n"
+				"Content-Length: " + lineByte.length + "\r\n\r\n"
 			);
-			outToClient.writeBytes(line);
+			
+			
+			outToClient.write(lineByte);
 		}
 }
