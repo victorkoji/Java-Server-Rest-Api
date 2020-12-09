@@ -278,7 +278,6 @@ public class Client implements Runnable {
 			
 			String[] req = request.split("/");
 			
-			
 			switch (req[0]) {
 				case "actors": {
 					ActorController actor = new ActorController();
